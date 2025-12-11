@@ -1,6 +1,4 @@
-<p>
-  <img src="assets/github-header.png" alt="Cardinal Logo" />
-</p>
+<img src="https://raw.githubusercontent.com/alomia/cardinal/main/assets/github-header.png" alt="Cardinal header" />
 
 # Cardinal
 
