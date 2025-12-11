@@ -1,10 +1,18 @@
 name: cardinal
-description: A starting point for Dart libraries or applications.
-version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+description: The declarative and elegant CLI framework for Dart.
+version: 0.1.0
+repository: https://github.com/alomia/cardinal
+homepage: https://github.com/alomia/cardinal
+issue_tracker: https://github.com/alomia/cardinal/issues
 
 environment:
   sdk: ^3.10.1
+
+topics:
+  - cli
+  - framework
+  - tools
+  - developer
 
 # Add regular dependencies here.
 dependencies:
