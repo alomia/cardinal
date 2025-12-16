@@ -1,6 +1,6 @@
 name: cardinal
 description: The declarative and elegant CLI framework for Dart.
-version: 0.1.1
+version: 0.2.0
 repository: https://github.com/alomia/cardinal
 homepage: https://github.com/alomia/cardinal
 issue_tracker: https://github.com/alomia/cardinal/issues
