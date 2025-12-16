@@ -2,7 +2,9 @@ library;
 
 // app
 export 'src/app/cardinal_app.dart';
-export 'src/app/cardinal_context.dart';
+
+// context
+export 'src/context/cardinal_context.dart';
 
 // commands
 export 'src/command/cardinal_command.dart';

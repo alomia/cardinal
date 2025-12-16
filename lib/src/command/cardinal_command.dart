@@ -1,7 +1,9 @@
 import 'package:args/command_runner.dart';
-import 'package:cardinal/src/app/cardinal_context.dart';
-import 'package:cardinal/src/definitions/argument_definition.dart';
-import 'package:cardinal/src/definitions/option_definition.dart';
+
+import '../context/cardinal_context.dart';
+import '../context/cardinal_project_config.dart';
+import '../definitions/argument_definition.dart';
+import '../definitions/option_definition.dart';
 
 class CardinalCommand extends Command<void> {
   @override
@@ -15,6 +17,7 @@ class CardinalCommand extends Command<void> {
   final Map<String, ArgumentDefinition> arguments;
 
   late final Map<String, int> _argIndexMap;
+  late CardinalProjectConfig _projectConfig;
 
   CardinalCommand({
     required this.name,
@@ -49,11 +52,52 @@ class CardinalCommand extends Command<void> {
     );
   }
 
+  void attachProjectConfig(CardinalProjectConfig config) {
+    _projectConfig = config;
+
+    for (var subCommand in subCommands) {
+      subCommand.attachProjectConfig(config);
+    }
+  }
+
+  void _validateRequiredArguments(List<String> positionalArgs) {
+    final requiredArguments = arguments.entries
+        .where((e) => e.value.isRequired)
+        .map((e) => e.key)
+        .toList();
+
+    if (positionalArgs.length < requiredArguments.length) {
+      final missing = requiredArguments
+          .sublist(positionalArgs.length)
+          .join(', ');
+
+      throw UsageException('Missing required arguments: $missing', usage);
+    }
+  }
+
   Future<void> execute(CardinalContext context) async {}
 
   @override
+  String get invocation {
+    final argsUsage = arguments.entries
+        .map((e) {
+          return e.value.isRequired ? '<${e.key}>' : '[${e.key}]';
+        })
+        .join(' ');
+
+    return '${runner!.executableName} $name $argsUsage';
+  }
+
+  @override
   Future<void> run() async {
-    final context = CardinalContext(argResults!, _argIndexMap);
+    _validateRequiredArguments(argResults!.rest);
+
+    final context = CardinalContext(
+      args: argResults!,
+      argIndexMap: _argIndexMap,
+      project: _projectConfig,
+    );
+
     await execute(context);
   }
 }
