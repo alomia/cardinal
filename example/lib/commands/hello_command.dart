@@ -5,25 +5,28 @@ class HelloCommand extends CardinalCommand {
     : super(
         name: 'hello',
         description: 'Greets a user.',
-        arguments: {
-          'name': stringArgument(help: 'The person to greet.')
-        },
-        options: {
-          'shout': flagOption(
-            help: 'Use uppercase output.',
-            abbr: 's'
+        arguments: [
+          stringArgument(
+            name: 'name',
+            help: 'Name of the user',
+            required: true,
           ),
-        },
+        ],
+        options: [
+          flagOption(
+            name: 'upper',
+            abbr: 'u',
+            help: 'Print greeting in uppercase',
+          ),
+        ],
       );
 
   @override
   Future<void> execute(CardinalContext context) async {
-    var name = context.argument('name');
-    var shout = context.option<bool>('shout') ?? false;
+    final name = context.argument<String>('name')!;
+    final upper = context.flag('upper');
 
-    var message = "Hello, $name!";
-    if (shout) message = message.toUpperCase();
-
-    print(message);
+    final message = 'Hello, $name';
+    print(upper ? message.toUpperCase() : message);
   }
 }

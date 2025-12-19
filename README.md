@@ -14,7 +14,9 @@
 **Cardinal** is a modern and declarative framework for building Command Line Interfaces in Dart.  
 Its focus is developer experience, clarity, and zero boilerplate.
 
-Unlike traditional argument parsers, Cardinal lets you define:
+Unlike traditional argument parsers that focus on flags and parsing,
+Cardinal focuses on commands as first-class concepts.
+
 
 - **Commands**  
 - **Subcommands**
@@ -34,7 +36,7 @@ All with a clean, expressive, and minimal API.
 - Powerful execution context  
 - Zero-boilerplate command registration  
 - Clean folder structure for large CLIs  
-- Designed for extensibility (completions, validators, dynamic types)
+- Designed for extensibility (validators, custom types, future completions)
 
 ---
 
@@ -44,7 +46,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  cardinal: ^0.1.0
+  cardinal: ^0.3.0
 
 ```
 ---
@@ -59,26 +61,29 @@ class HelloCommand extends CardinalCommand {
     : super(
         name: 'hello',
         description: 'Greets a user.',
-        arguments: {
-          'name': stringArgument(help: 'The person to greet.')
-        },
-        options: {
-          'shout': flagOption(
-            help: 'Use uppercase output.',
-            abbr: 's'
+        arguments: [
+          stringArgument(
+            name: 'name',
+            help: 'Name of the user',
+            required: true,
           ),
-        },
+        ],
+        options: [
+          flagOption(
+            name: 'upper',
+            abbr: 'u',
+            help: 'Print greeting in uppercase',
+          ),
+        ],
       );
 
   @override
   Future<void> execute(CardinalContext context) async {
-    var name = context.argument('name');
-    var shout = context.option<bool>('shout') ?? false;
+    final name = context.argument<String>('name')!;
+    final upper = context.flag('upper');
 
-    var message = "Hello, $name!";
-    if (shout) message = message.toUpperCase();
-
-    print(message);
+    final message = 'Hello, $name';
+    print(upper ? message.toUpperCase() : message);
   }
 }
 ```
@@ -88,17 +93,15 @@ class HelloCommand extends CardinalCommand {
 ``` dart
 import 'package:cardinal/cardinal.dart';
 
-import '../lib/commands/hello_command.dart';
-
+import 'commands/hello_command.dart';
 
 void main(List<String> args) {
   final app = CardinalApp(
     name: 'mycli',
     description: 'A sample CLI using Cardinal.',
-    version: '0.1.0',
     commands: [HelloCommand()],
   );
-
+  
   app.run(args);
 }
 ```
@@ -107,17 +110,45 @@ void main(List<String> args) {
 
 ``` sh
 dart run main.dart hello Cardinal
-Hello, Cardinal!
+Hello, Cardinal
 
 ```
 
 ### With flags:
 
 ``` sh
-dart run main.dart hello Cardinal -s
-HELLO, CARDINAL!
+dart run main.dart hello Cardinal --upper
+HELLO, CARDINAL
 
 ```
+
+### Help output
+
+``` sh
+dart run main.dart hello -h
+
+Greets a user.
+
+Usage: hello <name>
+-h, --help          Print this usage information.
+-u, --[no-]upper    Print greeting in uppercase
+
+Run "mycli help" to see global options.
+```
+---
+
+## Why Cardinal?
+
+Cardinal is not just an argument parser.
+
+It is a command-oriented framework that treats commands,
+subcommands, arguments, and options as first-class concepts.
+
+You design commands declaratively.
+Cardinal handles parsing, validation, and execution internally.
+
+The underlying parser is an implementation detail.
+
 ---
 
 ## Philosophy
