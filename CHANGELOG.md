@@ -1,3 +1,19 @@
+## [0.4.0]
+
+### Breaking Changes
+- Removed built-in logger support from `CardinalApp`.
+  Logging is now the responsibility of the consuming application.
+- Simplified `CardinalContext` by removing implicit logger access.
+
+### Changed
+- Simplified `CardinalApp` constructor and internal wiring.
+- Improved separation of concerns between the framework core and external tooling.
+- Refactored argument adapter internals for clarity and maintainability.
+
+### Internal
+- Minor internal cleanups in adapter and context handling.
+
+
 ## 0.3.0
 
 ### Breaking Changes

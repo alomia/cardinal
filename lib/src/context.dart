@@ -3,7 +3,6 @@ import 'package:args/args.dart';
 import 'argument.dart';
 
 abstract class CardinalContext {
-  Object? get logger;
   bool flag(String name);
   T? option<T>(String name);
   T? argument<T>(String name);
@@ -14,14 +13,12 @@ class ArgsCardinalContext implements CardinalContext {
   final ArgResults results;
   final ArgResults globals;
   final List<CardinalArgument> definitions;
-  final Object? _logger;
 
   ArgsCardinalContext({
     required this.results,
     required this.globals,
     required this.definitions,
-    Object? logger,
-  }) : _logger = logger;
+  });
 
   @override
   bool flag(String name) {
@@ -67,9 +64,6 @@ class ArgsCardinalContext implements CardinalContext {
   @override
   List<String> get arguments => List.unmodifiable(results.rest);
 
-
-  
-
   T? _convert<T>(String value) {
     return switch (T) {
       const (String) => value as T,
@@ -79,7 +73,4 @@ class ArgsCardinalContext implements CardinalContext {
       _ => null,
     };
   }
-  
-  @override
-  Object? get logger => _logger;
 }
