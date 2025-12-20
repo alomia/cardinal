@@ -9,14 +9,12 @@ import 'option.dart';
 class CardinalApp {
   final String name;
   final String description;
-  final Object? logger;
   final List<CardinalOption> globalOptions;
   final List<CardinalCommand> commands;
 
   CardinalApp({
     required this.name,
     required this.description,
-    this.logger,
     this.globalOptions = const [],
     this.commands = const [],
   });
@@ -29,7 +27,7 @@ class CardinalApp {
     }
 
     for (final cmd in commands) {
-      runner.addCommand(ArgsCommandAdapter(cmd, logger: logger));
+      runner.addCommand(ArgsCommandAdapter(cmd));
     }
 
     try {

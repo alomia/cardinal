@@ -8,6 +8,6 @@ void main(List<String> args) {
     description: 'A sample CLI using Cardinal.',
     commands: [HelloCommand()],
   );
-  
+
   app.run(args);
 }

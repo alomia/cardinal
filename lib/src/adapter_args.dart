@@ -5,15 +5,14 @@ import 'context.dart';
 
 class ArgsCommandAdapter extends Command {
   final CardinalCommand _source;
-  final Object? logger;
 
-  ArgsCommandAdapter(this._source, {this.logger}) {
+  ArgsCommandAdapter(this._source) {
     for (final opt in _source.options) {
       opt.register(argParser);
     }
 
     for (final sub in _source.subcommands) {
-      addSubcommand(ArgsCommandAdapter(sub, logger: logger));
+      addSubcommand(ArgsCommandAdapter(sub));
     }
   }
 
@@ -55,7 +54,6 @@ class ArgsCommandAdapter extends Command {
       results: argResults!,
       globals: globalResults!,
       definitions: _source.arguments,
-      
     );
     await _source.execute(context);
   }
